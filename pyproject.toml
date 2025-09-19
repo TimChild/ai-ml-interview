@@ -4,7 +4,9 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "numpy>=2.3.3",
+]
 
 
 [tool.pyright]
@@ -77,6 +79,7 @@ ignore = [
     "T201",   # print found (we use print in examples)
     "T203",   # pprint found
     "N806",  # variable in function should be lowercase
+    "N803", # argument name should be lowercase 
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
