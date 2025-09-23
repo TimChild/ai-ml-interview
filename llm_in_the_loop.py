@@ -31,7 +31,6 @@ def retrieve_sim_results(state: State) -> State:
         tol=state.sim_inputs.get("tol"),
     )
 
-    # For interview: they just read/modify; no I/O needed.
     state.sim_outputs["Q_out"] = result["Q_out"]  # e.g., heat outflow from sim
     state.sim_outputs["dT_measured"] = result[
         "dT_measured"
@@ -40,7 +39,6 @@ def retrieve_sim_results(state: State) -> State:
 
 
 def llm_analyze(state: State) -> State:
-    # Pretend this is an LLM call. We deliberately leave a potential bug/imprecision.
     q_in = state.sim_inputs["Q_in"]
     q_out = state.sim_outputs["Q_out"]
     _ = state.sim_outputs["dT_measured"]
@@ -53,7 +51,6 @@ def llm_analyze(state: State) -> State:
 
 
 def physics_guardrail(state: State) -> State:
-    # Check conservation-ish constraint: ΔE = m*cp*ΔT should match (Q_in - Q_out)*dt (very simplified).
     m = state.sim_inputs["m"]
     cp = state.sim_inputs["cp"]
     dt = state.sim_inputs["dt"]
@@ -61,6 +58,7 @@ def physics_guardrail(state: State) -> State:
     Qout = state.sim_outputs["Q_out"]
     dT = state.sim_outputs["dT_measured"]
 
+    # Check conservation-ish constraint: ΔE = m*cp*ΔT should match (Q_in - Q_out)*dt (very simplified).
     lhs = m * cp * dT  # observed energy change
     rhs = (Qin - Qout) * dt  # predicted by flows
     resid = lhs - rhs
